@@ -2,8 +2,9 @@
 Open Sublime Text 3 From the Command Line by type subl
 
 # Notice
-	for it work install.bat will drop a file into C:\env.bat
-	,also use your system registry [HKEY_CURRENT_USER\Software\Microsoft\Command Processor\AutoRun]
+	for it work install.bat will do following thing in your system
+	1. place a file C:\env.bat
+	2. change registry [HKEY_CURRENT_USER\Software\Microsoft\Command Processor\AutoRun]
 
 # Install
 	Step 1. Download install.bat
