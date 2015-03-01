@@ -1,24 +1,39 @@
 @echo off
 
 echo detect sublime version
-if exist "%ProgramFiles%\Sublime Text 3\sublime_text.exe" (
-	rem x64 sublime 3
-	echo @echo off > C:\env.bat
-	echo set "PATH=%%PATH%%;%%ProgramFiles%%\Sublime Text 3\" >> C:\env.bat
-) else (
-	if exist "%ProgramFiles(x86)%\Sublime Text 3\sublime_text.exe" (
-		rem x86 sublime 3
-		echo @echo off > C:\env.bat
-		echo set "PATH=%%PATH%%;%%ProgramFiles(x86)%%\Sublime Text 3\;" >> C:\env.bat
-	) else ( 
-		echo sublime not installed
-		goto :END
+for %%d in (
+	"%ProgramFiles%\Sublime Text 3",
+	"%ProgramFiles(x86)%\Sublime Text 3",
+	"%ProgramFiles%\Sublime Text 2",
+	"%ProgramFiles(x86)%\Sublime Text 2"
+) do (
+	if exist %%d (
+		set _xx=%%d
+		goto :success
 	)
 )
 
-echo doskey subl=sublime_text.exe $* >> C:\env.bat
+:end
+echo can't find
+goto :finish
+
+:success
+
+echo starting set env file.
+
+echo @set "PATH=%%PATH%%;%_xx:~1,-1%" > C:\env.bat
+
+cd %_xx%
+
+:: in sublime_text 3 has subl.exe
+:: so dno't need doskey
+if not exist subl.exe (
+	echo @doskey subl=sublime_text.exe $* >> C:\env.bat
+)
 :: save registry
 @reg add "HKEY_CURRENT_USER\Software\Microsoft\Command Processor" /v "AutoRun" /t REG_SZ /d "C:\env.bat" /f
-echo success!!
-:END
-@pause
+echo done!!
+
+goto :finish
+
+:finish
